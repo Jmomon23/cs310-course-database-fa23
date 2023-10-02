@@ -1,144 +1,33 @@
-package edu.jsu.mcis.cs310.coursedb.dao;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.Statement;
+import java.sql.SQLException;
 
 public class RegistrationDAO {
-    
-    // INSERT YOUR CODE HERE
-    
-    private final DAOFactory daoFactory;
-    
-    RegistrationDAO(DAOFactory daoFactory) {
-        this.daoFactory = daoFactory;
-    }
-    
-    public boolean create(int studentid, int termid, int crn) {
-        
-        boolean result = false;
-        
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        
+    // Existing methods...
+
+    // Method to register a student for a course
+    public boolean create(int studentID, int termID, int crn) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+
         try {
-            
-            Connection conn = daoFactory.getConnection();
-            
-            if (conn.isValid(0)) {
-                
-                // INSERT YOUR CODE HERE
-                
-            }
-            
+            connection = getConnection(); // Implement your getConnection() method
+
+            // Prepare the SQL query to insert registration
+            String sql = "INSERT INTO registration (studentid, termid, crn) VALUES (?, ?, ?)";
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, studentID);
+            statement.setInt(2, termID);
+            statement.setInt(3, crn);
+
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected > 0; // Returns true if insertion was successful
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            closeResources(connection, statement, null); // Implement this method to close resources
         }
-        
-        catch (Exception e) { e.printStackTrace(); }
-        
-        finally {
-            
-            if (rs != null) { try { rs.close(); } catch (Exception e) { e.printStackTrace(); } }
-            if (ps != null) { try { ps.close(); } catch (Exception e) { e.printStackTrace(); } }
-            
-        }
-        
-        return result;
-        
     }
 
-    public boolean delete(int studentid, int termid, int crn) {
-        
-        boolean result = false;
-        
-        PreparedStatement ps = null;
-        
-        try {
-            
-            Connection conn = daoFactory.getConnection();
-            
-            if (conn.isValid(0)) {
-                
-                // INSERT YOUR CODE HERE
-                
-            }
-            
-        }
-        
-        catch (Exception e) { e.printStackTrace(); }
-        
-        finally {
-
-            if (ps != null) { try { ps.close(); } catch (Exception e) { e.printStackTrace(); } }
-            
-        }
-        
-        return result;
-        
-    }
-    
-    public boolean delete(int studentid, int termid) {
-        
-        boolean result = false;
-        
-        PreparedStatement ps = null;
-        
-        try {
-            
-            Connection conn = daoFactory.getConnection();
-            
-            if (conn.isValid(0)) {
-                
-                // INSERT YOUR CODE HERE
-                
-            }
-            
-        }
-        
-        catch (Exception e) { e.printStackTrace(); }
-        
-        finally {
-
-            if (ps != null) { try { ps.close(); } catch (Exception e) { e.printStackTrace(); } }
-            
-        }
-        
-        return result;
-        
-    }
-
-    public String list(int studentid, int termid) {
-        
-        String result = "[]";
-        
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        ResultSetMetaData rsmd = null;
-        
-        try {
-            
-            Connection conn = daoFactory.getConnection();
-            
-            if (conn.isValid(0)) {
-                
-                // INSERT YOUR CODE HERE
-                
-            }
-            
-        }
-        
-        catch (Exception e) { e.printStackTrace(); }
-        
-        finally {
-            
-            if (rs != null) { try { rs.close(); } catch (Exception e) { e.printStackTrace(); } }
-            if (ps != null) { try { ps.close(); } catch (Exception e) { e.printStackTrace(); } }
-            
-        }
-        
-        return result;
-        
-    }
-    
-}
+    // Other existing methods...
