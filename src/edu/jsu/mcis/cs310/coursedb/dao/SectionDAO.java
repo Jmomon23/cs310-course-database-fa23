@@ -4,10 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SectionDAO {
-    
-    // INSERT YOUR CODE HERE
     
     private final DAOFactory daoFactory;
     
@@ -21,7 +21,6 @@ public class SectionDAO {
         
         PreparedStatement ps = null;
         ResultSet rs = null;
-        ResultSetMetaData rsmd = null;
         
         try {
             
@@ -29,8 +28,14 @@ public class SectionDAO {
             
             if (conn.isValid(0)) {
                 
-                // INSERT YOUR CODE HERE
-                
+                String query = "SELECT * FROM section WHERE termid = ? AND subjectid = ? AND num = ? ORDER BY crn";
+                ps = conn.prepareStatement(query);
+                ps.setInt(1, termid);
+                ps.setString(2, subjectid);
+                ps.setString(3, num);
+
+                rs = ps.executeQuery();
+                result = convertResultSetToJson(rs);
             }
             
         }
@@ -45,7 +50,24 @@ public class SectionDAO {
         }
         
         return result;
-        
     }
     
+    private String convertResultSetToJson(ResultSet rs) throws Exception {
+        List<String> jsonArray = new ArrayList<>();
+        ResultSetMetaData rsmd = rs.getMetaData();
+        int numColumns = rsmd.getColumnCount();
+
+        while (rs.next()) {
+            StringBuilder json = new StringBuilder("{");
+            for (int i = 1; i <= numColumns; i++) {
+                json.append("\"").append(rsmd.getColumnName(i)).append("\":\"").append(rs.getString(i)).append("\",");
+            }
+            // Remove the trailing comma
+            json.deleteCharAt(json.length() - 1);
+            json.append("}");
+            jsonArray.add(json.toString());
+        }
+
+        return "[" + String.join(",", jsonArray) + "]";
+    }
 }
